@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { getHistorialClinico } from '../api/historialClinico';
+import { getHistorialClinico } from '../../api/historialClinico';
 
 function HistorialClinico() {
   const [historiales, setHistoriales] = useState([]);

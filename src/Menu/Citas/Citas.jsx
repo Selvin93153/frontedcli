@@ -1,7 +1,7 @@
 // src/pages/Citas.jsx
 
 import React, { useEffect, useState } from 'react';
-import { getCitas } from '../api/Citas.js';
+import { getCitas } from '../../api/Citas.js';
 
 function Citas() {
   const [citas, setCitas] = useState([]);

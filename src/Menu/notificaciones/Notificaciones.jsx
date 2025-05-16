@@ -1,7 +1,7 @@
 // src/components/Notificaciones.jsx
 
 import React, { useEffect, useState } from 'react';
-import { getNotificaciones } from '../api/notificaciones';
+import { getNotificaciones } from '../../api/notificaciones';
 
 function Notificaciones() {
   const [notificaciones, setNotificaciones] = useState([]);

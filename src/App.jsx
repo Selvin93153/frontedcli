@@ -1,12 +1,12 @@
 import { useEffect, useState } from 'react';
 import './App.css';
 
-import Citas from './Menu/Citas.jsx';
-import Historial from './Menu/Historial.jsx';
+import Citas from './Menu/citas/Citas.jsx';
+import Historial from './Menu/historial/Historial.jsx';
 import Inicio from './Menu/Inicio.jsx';
-import Inventario from './Menu/Inventario.jsx';
-import Notificaciones from './Menu/Notificaciones.jsx';
-import Usuarios from './Menu/Usuarios.jsx';
+import Inventario from './Menu/inventario/Inventario.jsx';
+import Notificaciones from './Menu/notificaciones/Notificaciones.jsx';
+import Usuarios from './Menu/usuarios/Usuarios.jsx';
 
 function App() {
   const [moduloActivo, setModuloActivo] = useState('inicio');

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { getUsuarios } from '../api/usuarios';
+import { getUsuarios } from '../../api/usuarios';
 
 function Usuarios() {
   const [usuarios, setUsuarios] = useState([]);

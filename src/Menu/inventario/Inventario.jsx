@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { getInventario } from '../api/inventario';
+import { getInventario } from '../../api/inventario';
 
 function Inventario() {
   const [items, setItems] = useState([]);
