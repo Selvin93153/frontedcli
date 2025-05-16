@@ -1,82 +1,51 @@
-import { useState } from 'react';
+// src/components/Notificaciones.jsx
+
+import React, { useEffect, useState } from 'react';
+import { getNotificaciones } from '../api/notificaciones';
 
 function Notificaciones() {
-  const [notificaciones, setNotificaciones] = useState([
-    { id: 1, mensaje: 'Cita programada para mañana', leido: false }
-  ]);
+  const [notificaciones, setNotificaciones] = useState([]);
 
-  const [mensaje, setMensaje] = useState('');
-
-  const agregarNotificacion = (e) => {
-    e.preventDefault();
-    const nueva = {
-      id: notificaciones.length + 1,
-      mensaje,
-      leido: false
-    };
-    setNotificaciones([nueva, ...notificaciones]);
-    setMensaje('');
-  };
-
-  const marcarLeido = (id) => {
-    const actualizado = notificaciones.map(n =>
-      n.id === id ? { ...n, leido: true } : n
-    );
-    setNotificaciones(actualizado);
-  };
+  useEffect(() => {
+    getNotificaciones()
+      .then(data => {
+        const adaptadas = Array.isArray(data)
+          ? data.map(n => ({
+              id: n.id_notificacion,
+              mensaje: n.mensaje,
+              nombres: n.usuario?.nombres || '',
+              apellidos: n.usuario?.apellidos || ''
+            }))
+          : [];
+        setNotificaciones(adaptadas);
+      })
+      .catch(error => console.error('Error al cargar notificaciones:', error));
+  }, []);
 
   return (
-    <div style={{ backgroundColor: '#f9f9f9', padding: '2rem', borderRadius: '12px', marginBottom: '2rem' }}>
-      <h2 style={{ color: '#0c63e4' }}>🔔 Notificaciones</h2>
+    <div style={{ backgroundColor: '#fff5e6', padding: '2rem', borderRadius: '12px' }}>
+      <h2 style={{ color: '#d35400' }}>🔔 Notificaciones</h2>
 
-      <form onSubmit={agregarNotificacion} style={{ display: 'flex', gap: '0.5rem', marginBottom: '1rem' }}>
-        <input
-          value={mensaje}
-          onChange={(e) => setMensaje(e.target.value)}
-          placeholder="Escribir nueva notificación"
-          required
-          style={{ flex: 1 }}
-        />
-        <button type="submit" style={{
-          backgroundColor: '#0c63e4',
-          color: 'white',
-          padding: '0.5rem 1rem',
-          border: 'none',
-          borderRadius: '5px'
-        }}>
-          Enviar
-        </button>
-      </form>
-
-      <ul style={{ listStyle: 'none', padding: 0 }}>
-        {notificaciones.map((n) => (
-          <li
-            key={n.id}
-            style={{
-              backgroundColor: n.leido ? '#e0ffe0' : '#ffe0e0',
-              padding: '0.75rem',
-              borderRadius: '6px',
-              marginBottom: '0.5rem',
-              display: 'flex',
-              justifyContent: 'space-between',
-              alignItems: 'center'
-            }}
-          >
-            <span>{n.mensaje}</span>
-            {!n.leido && (
-              <button onClick={() => marcarLeido(n.id)} style={{
-                backgroundColor: '#999',
-                color: 'white',
-                border: 'none',
-                padding: '0.3rem 0.8rem',
-                borderRadius: '4px'
-              }}>
-                Marcar como leído
-              </button>
-            )}
-          </li>
-        ))}
-      </ul>
+      <table border="1" cellPadding="10" style={{ width: '100%', borderCollapse: 'collapse' }}>
+        <thead>
+          <tr style={{ backgroundColor: '#ffe0b2' }}>
+            <th>ID</th>
+            <th>Nombres</th>
+            <th>Apellidos</th>
+            <th>Mensaje</th>
+          </tr>
+        </thead>
+        <tbody>
+          {notificaciones.map(n => (
+            <tr key={n.id}>
+              <td>{n.id}</td>
+              <td>{n.nombres}</td>
+              <td>{n.apellidos}</td>
+              <td>{n.mensaje}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
     </div>
   );
 }
