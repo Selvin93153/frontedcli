@@ -11,3 +11,23 @@ export const getInventario = async () => {
     throw error;
   }
 };
+
+export const createInventario = async (data) => {
+  try {
+    const response = await axios.post(`${API_URL}/api/inventario`, data);
+    return response.data;
+  } catch (error) {
+    console.error('Error al crear inventario:', error);
+    throw error;
+  }
+};
+
+export const updateInventario = async (id, data) => {
+  try {
+    const response = await axios.patch(`${API_URL}/api/inventario/${id}`, data);
+    return response.data;
+  } catch (error) {
+    console.error('Error al actualizar inventario:', error);
+    throw error;
+  }
+};

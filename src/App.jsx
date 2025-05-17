@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import './App.css';
 
-import Citas from './Menu/citas/Citas.jsx';
+import Citas from './Menu/Citas/Citas.jsx';
 import Historial from './Menu/historial/Historial.jsx';
 import Inicio from './Menu/Inicio.jsx';
 import Inventario from './Menu/inventario/Inventario.jsx';
