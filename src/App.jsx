@@ -8,6 +8,7 @@ import Inventario from './Menu/inventario/Inventario.jsx';
 import Notificaciones from './Menu/notificaciones/Notificaciones.jsx';
 import Usuarios from './Menu/usuarios/Usuarios.jsx';
 import Pacientes from './Menu/pacientes/Pacientes.jsx';
+import Registrate from  './Menu/Registrarse/RegistroUsuarioPaciente.jsx';
 
 function App() {
   const [moduloActivo, setModuloActivo] = useState('inicio');
@@ -33,6 +34,7 @@ function App() {
         <button onClick={() => setModuloActivo('historial')}>📋 Historial</button>
         <button onClick={() => setModuloActivo('notificaciones')}>🔔 Notificaciones</button>
         <button onClick={() => setModuloActivo('pacientes')}> Pacientes</button>
+         <button onClick={() => setModuloActivo('registrate')}> Registrate</button>
       </nav>
 
       <main>
@@ -43,6 +45,7 @@ function App() {
         {moduloActivo === 'historial' && <Historial />}
         {moduloActivo === 'notificaciones' && <Notificaciones />}
            {moduloActivo === 'pacientes' && <Pacientes />}
+           {moduloActivo === 'registrate' && <Registrate />}
       </main>
     </div>
   );

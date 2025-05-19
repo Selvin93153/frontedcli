@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { createUsuario, updateUsuario } from "../../api/usuarios";
 import { getRoles } from "../../api/roles";
-
+import 'bootstrap/dist/css/bootstrap.min.css';
 function FormUsuario({ selectedUser, onSuccess, onCancel }) {
   const [formData, setFormData] = useState({
     nombres: "",

@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { getHistorialClinico } from '../../api/historialClinico';
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 function HistorialClinico() {
   const [historiales, setHistoriales] = useState([]);
