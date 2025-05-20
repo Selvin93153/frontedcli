@@ -11,3 +11,13 @@ export const getHistorialClinico = async () => {
     throw error;
   }
 };
+
+export const postHistorialClinico = async (data) => {
+  try {
+    const response = await axios.post(`${API_URL}/api/historial-clinico`, data);
+    return response.data;
+  } catch (error) {
+    console.error('Error al crear historial clínico:', error);
+    throw error;
+  }
+};

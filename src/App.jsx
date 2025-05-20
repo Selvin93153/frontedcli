@@ -1,8 +1,9 @@
 import { useEffect, useState } from 'react';
 import './App.css';
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 import Citas from './Menu/Citas/Citas.jsx';
-import Historial from './Menu/historial/Historial.jsx';
+import Historial from './Menu/historial/HistorialClinico.jsx';
 import Inicio from './Menu/Inicio.jsx';
 import Inventario from './Menu/inventario/Inventario.jsx';
 import Notificaciones from './Menu/notificaciones/Notificaciones.jsx';
