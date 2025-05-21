@@ -2,10 +2,20 @@ import React, { useEffect, useState } from 'react';
 import { getPacientes } from '../../api/pacientes';
 import FormPaciente from './FormPaciente';
 
-function Pacientes() {
+function Pacientes({ usuario }) {
   const [pacientes, setPacientes] = useState([]);
   const [selectedPaciente, setSelectedPaciente] = useState(null);
   const [showForm, setShowForm] = useState(false);
+
+    // Solo permite a usuarios con rol 3 ver este módulo
+  if (usuario.rol.id_rol !== 3) {
+    return (
+      <div style={{ padding: '2rem', textAlign: 'center' }}>
+        <h4 className="text-muted">⚠️ No tienes permiso para ver este módulo.</h4>
+      </div>
+    );
+  }
+
 
   const fetchPacientes = async () => {
     try {
