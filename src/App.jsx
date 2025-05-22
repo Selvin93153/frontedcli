@@ -9,7 +9,6 @@ import Inventario from './Menu/inventario/Inventario.jsx';
 import Notificaciones from './Menu/notificaciones/Notificaciones.jsx';
 import Usuarios from './Menu/usuarios/Usuarios.jsx';
 import Pacientes from './Menu/pacientes/Pacientes.jsx';
-import Registrate from './Menu/Registrarse/RegistroUsuarioPaciente.jsx';
 import Login from './Login/Login.jsx';
 
 function App() {
@@ -72,19 +71,17 @@ function App() {
         {(idRol === 2 || idRol === 3) && (
           <button onClick={() => setModuloActivo('pacientes')}>Pacientes</button>
         )}
-        <button onClick={() => setModuloActivo('registrate')}>Registrate</button>
 
       </nav>
 
       <main>
         {moduloActivo === 'inicio' && <Inicio />}
         {moduloActivo === 'usuarios' && <Usuarios />}
-        {moduloActivo === 'citas' && <Citas />}
+        {moduloActivo === 'citas' && <Citas usuario={usuario}/>}
         {moduloActivo === 'inventario' && <Inventario />}
         {moduloActivo === 'historial' && <Historial />}
-        {moduloActivo === 'notificaciones' && <Notificaciones />}
+        {moduloActivo === 'notificaciones' && <Notificaciones usuario={usuario}  />}
         {moduloActivo === 'pacientes' && <Pacientes usuario={usuario} />}
-        {moduloActivo === 'registrate' && <Registrate />}
         
       </main>
     </div>

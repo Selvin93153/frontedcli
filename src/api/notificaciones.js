@@ -43,3 +43,17 @@ export const updateNotificacion = async (id, data) => {
     throw error;
   }
 };
+
+export const marcarComoLeida = async (id) => {
+  const res = await fetch(`http://localhost:4000/api/notificaciones/${id}`, {
+    method: 'PATCH',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ leida: true }),
+  });
+
+  if (!res.ok) throw new Error('Error al marcar como leída');
+
+  return res.json();
+};
