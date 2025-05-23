@@ -73,23 +73,24 @@ function Notificaciones() {
         🔔 Notificaciones {hayNoLeidas && <span style={{ color: 'red' }}>📢</span>}
       </h2>
 
-      {usuario?.rol?.id_rol === 3 && !mostrarFormulario && (
-        <button
-          onClick={handleMostrarFormulario}
-          style={{
-            backgroundColor: '#d35400',
-            color: '#fff',
-            padding: '10px 20px',
-            border: 'none',
-            borderRadius: '8px',
-            cursor: 'pointer',
-            fontSize: '16px',
-            marginBottom: '1rem'
-          }}
-        >
-          ➕ Enviar Notificación
-        </button>
-      )}
+       {(usuario?.rol?.id_rol === 3 || usuario?.rol?.id_rol === 2) && !mostrarFormulario && (
+  <button
+    onClick={handleMostrarFormulario}
+    style={{
+      backgroundColor: '#d35400',
+      color: '#fff',
+      padding: '10px 20px',
+      border: 'none',
+      borderRadius: '8px',
+      cursor: 'pointer',
+      fontSize: '16px',
+      marginBottom: '1rem'
+    }}
+  >
+    ➕ Enviar Notificación
+  </button>
+)}
+
 
       {mostrarFormulario ? (
         <FormNotificacion onSuccess={handleOcultarFormulario} />

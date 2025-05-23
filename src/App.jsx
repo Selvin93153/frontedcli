@@ -10,6 +10,7 @@ import Notificaciones from './Menu/notificaciones/Notificaciones.jsx';
 import Usuarios from './Menu/usuarios/Usuarios.jsx';
 import Pacientes from './Menu/pacientes/Pacientes.jsx';
 import Login from './Login/Login.jsx';
+import Medicos from './Menu/medicos/Medicos.jsx';
 
 function App() {
   const [moduloActivo, setModuloActivo] = useState('inicio');
@@ -67,6 +68,9 @@ function App() {
         {(idRol === 1 || idRol === 2 || idRol === 3) && (
           <button onClick={() => setModuloActivo('notificaciones')}>🔔 Notificaciones</button>
         )}
+          {(idRol === 1 || idRol === 2 || idRol === 3) && (
+          <button onClick={() => setModuloActivo('medicos')}> Medicos</button>
+        )}
 
         {(idRol === 2 || idRol === 3) && (
           <button onClick={() => setModuloActivo('pacientes')}>Pacientes</button>
@@ -81,6 +85,7 @@ function App() {
         {moduloActivo === 'inventario' && <Inventario />}
         {moduloActivo === 'historial' && <Historial />}
         {moduloActivo === 'notificaciones' && <Notificaciones usuario={usuario}  />}
+        {moduloActivo === 'medicos' && <Medicos />}
         {moduloActivo === 'pacientes' && <Pacientes usuario={usuario} />}
         
       </main>

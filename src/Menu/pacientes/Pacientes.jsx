@@ -7,14 +7,14 @@ function Pacientes({ usuario }) {
   const [selectedPaciente, setSelectedPaciente] = useState(null);
   const [showForm, setShowForm] = useState(false);
 
-    // Solo permite a usuarios con rol 3 ver este módulo
-  if (usuario.rol.id_rol !== 3) {
-    return (
-      <div style={{ padding: '2rem', textAlign: 'center' }}>
-        <h4 className="text-muted">⚠️ No tienes permiso para ver este módulo.</h4>
-      </div>
-    );
-  }
+  // Solo permite a usuarios con rol 2 o 3 ver este módulo
+if (![2, 3].includes(usuario.rol.id_rol)) {
+  return (
+    <div style={{ padding: '2rem', textAlign: 'center' }}>
+      <h4 className="text-muted">⚠️ No tienes permiso para ver este módulo.</h4>
+    </div>
+  );
+}
 
 
   const fetchPacientes = async () => {
