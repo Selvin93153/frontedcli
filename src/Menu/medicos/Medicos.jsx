@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { getMedicos, createMedico, getUsuariosMedicos } from '../../api/medicos';
+import { getMedicos, createMedico, getUsuariosMedicos, updateMedico } from '../../api/medicos';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 function Medicos() {
@@ -9,8 +9,9 @@ function Medicos() {
   const [telefono, setTelefono] = useState('');
   const [usuarioSeleccionado, setUsuarioSeleccionado] = useState('');
   const [mensaje, setMensaje] = useState(null);
+  const [modoEdicion, setModoEdicion] = useState(false);
+  const [medicoEditando, setMedicoEditando] = useState(null);
 
-  // Obtener usuario logueado
   const usuario = JSON.parse(localStorage.getItem('usuario'));
 
   const cargarDatos = async () => {
@@ -24,26 +25,60 @@ function Medicos() {
     cargarDatos();
   }, []);
 
+  const limpiarFormulario = () => {
+    setEspecialidad('');
+    setTelefono('');
+    setUsuarioSeleccionado('');
+    setModoEdicion(false);
+    setMedicoEditando(null);
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const datosMedico = {
+    const datos = {
       especialidad,
       telefono,
       id_usuario: Number(usuarioSeleccionado),
     };
 
     try {
-      await createMedico(datosMedico);
-      setMensaje({ tipo: 'exito', texto: 'Médico creado exitosamente.' });
-      setEspecialidad('');
-      setTelefono('');
-      setUsuarioSeleccionado('');
+      if (modoEdicion) {
+        // Para la edición, enviar id_usuario solo si cambió o si quieres permitir editarlo
+        const dataActualizar = {
+          especialidad,
+          telefono,
+        };
+
+        // Si quieres permitir cambiar usuario, descomenta esta línea
+        // dataActualizar.id_usuario = Number(usuarioSeleccionado);
+
+        await updateMedico(medicoEditando.id_medico, dataActualizar);
+        setMensaje({ tipo: 'exito', texto: 'Médico actualizado correctamente.' });
+      } else {
+        await createMedico(datos);
+        setMensaje({ tipo: 'exito', texto: 'Médico creado exitosamente.' });
+      }
+
+      limpiarFormulario();
       cargarDatos();
     } catch (error) {
-      console.error('❌ Error al crear médico:', error);
-      setMensaje({ tipo: 'error', texto: 'Error al crear médico.' });
+      console.error('❌ Error al guardar médico:', error);
+      setMensaje({ tipo: 'error', texto: 'Error al guardar médico.' });
     }
+  };
+
+  const iniciarEdicion = (medico) => {
+    setModoEdicion(true);
+    setMedicoEditando(medico);
+    setEspecialidad(medico.especialidad);
+    setTelefono(medico.telefono);
+    setUsuarioSeleccionado(medico.usuario?.id_usuario || '');
+  };
+
+  const cancelarEdicion = () => {
+    limpiarFormulario();
+    setMensaje(null);
   };
 
   return (
@@ -56,10 +91,11 @@ function Medicos() {
         </div>
       )}
 
-      {/* Solo los usuarios con rol 3 pueden registrar médicos */}
       {usuario?.rol?.id_rol === 3 && (
         <form onSubmit={handleSubmit} className="card shadow p-4 mb-4">
-          <h4 className="mb-3 text-success">Registrar nuevo médico</h4>
+          <h4 className="mb-3 text-success">
+            {modoEdicion ? '✏️ Editar Médico' : 'Registrar nuevo médico'}
+          </h4>
 
           <div className="row">
             <div className="col-md-4 mb-3">
@@ -90,6 +126,8 @@ function Medicos() {
                 value={usuarioSeleccionado}
                 onChange={(e) => setUsuarioSeleccionado(e.target.value)}
                 required
+                // Cambia a false para permitir editar usuario al editar médico
+                disabled={modoEdicion /* || false */}
               >
                 <option value="">Selecciona un usuario médico...</option>
                 {usuarios.map((u) => (
@@ -101,7 +139,19 @@ function Medicos() {
             </div>
           </div>
 
-          <button type="submit" className="btn btn-success">Guardar Médico</button>
+          <button type="submit" className="btn btn-success me-2">
+            {modoEdicion ? 'Actualizar Médico' : 'Guardar Médico'}
+          </button>
+
+          {modoEdicion && (
+            <button
+              type="button"
+              className="btn btn-secondary"
+              onClick={cancelarEdicion}
+            >
+              Cancelar
+            </button>
+          )}
         </form>
       )}
 
@@ -114,6 +164,7 @@ function Medicos() {
               <th>Especialidad</th>
               <th>Teléfono</th>
               <th>Correo</th>
+              {usuario?.rol?.id_rol === 3 && <th>Acciones</th>}
             </tr>
           </thead>
           <tbody className="text-center">
@@ -124,6 +175,16 @@ function Medicos() {
                 <td>{medico.especialidad}</td>
                 <td>{medico.telefono}</td>
                 <td>{medico.usuario?.correo}</td>
+                {usuario?.rol?.id_rol === 3 && (
+                  <td>
+                    <button
+                      className="btn btn-warning btn-sm"
+                      onClick={() => iniciarEdicion(medico)}
+                    >
+                      ✏️ Editar
+                    </button>
+                  </td>
+                )}
               </tr>
             ))}
           </tbody>
@@ -134,4 +195,3 @@ function Medicos() {
 }
 
 export default Medicos;
-

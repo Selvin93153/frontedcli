@@ -3,6 +3,10 @@ import { getCitas } from '../../api/Citas';
 import FormCitas from '../Citas/FormCitas.jsx';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
+// Importar jsPDF y autotable
+import jsPDF from 'jspdf';
+import 'jspdf-autotable';
+
 function Citas() {
   const [citas, setCitas] = useState([]);
   const [usuario, setUsuario] = useState(null);
@@ -52,6 +56,49 @@ function Citas() {
     }
   }, [usuario]);
 
+  // Función para imprimir una cita en PDF
+  const imprimirCitaPDF = (cita) => {
+    const doc = new jsPDF();
+
+    doc.setFontSize(18);
+    doc.setTextColor('#0d6efd'); // color azul bootstrap
+    doc.text('📅 Detalles de la Cita Médica', 14, 22);
+
+    doc.setDrawColor(13, 110, 253); // azul para líneas
+    doc.setLineWidth(0.5);
+    doc.line(14, 25, 196, 25);
+
+    doc.setFontSize(12);
+    doc.setTextColor('#212529'); // color texto normal
+
+    const startY = 35;
+    const lineHeight = 10;
+
+    doc.text(`ID Cita: ${cita.id}`, 14, startY);
+    doc.text(`Fecha: ${cita.fecha}`, 14, startY + lineHeight);
+    doc.text(`Hora: ${cita.hora}`, 14, startY + lineHeight * 2);
+
+    doc.text(`Estado: ${cita.estado}`, 14, startY + lineHeight * 3);
+
+    if (usuario?.rol?.id_rol !== 1) {
+      doc.text(`Paciente: ${cita.pacienteNombre} ${cita.pacienteApellido}`, 14, startY + lineHeight * 4);
+    }
+
+    doc.text(`Médico: Dr(a). ${cita.medicoNombre} ${cita.medicoApellido}`, 14, startY + lineHeight * 5);
+    doc.text(`Especialidad: ${cita.especialidad}`, 14, startY + lineHeight * 6);
+
+    doc.setDrawColor(13, 110, 253);
+    doc.line(14, startY + lineHeight * 7 + 2, 196, startY + lineHeight * 7 + 2);
+
+    // Footer
+    doc.setFontSize(10);
+    doc.setTextColor('#6c757d');
+    doc.text('Sistema de Gestión de Citas Médicas', 14, 285, null, null, 'left');
+    doc.text(`Generado el: ${new Date().toLocaleString()}`, 196, 285, null, null, 'right');
+
+    doc.save(`Cita_${cita.id}.pdf`);
+  };
+
   return (
     <div className="container mt-5">
       <h1 className="text-primary mb-4">📅 Citas Médicas</h1>
@@ -68,7 +115,7 @@ function Citas() {
       )}
 
       <div className="card shadow">
-        <div className="card-header bg-primary text-white">
+        <div className="card-header bg-primary text-white d-flex justify-content-between align-items-center">
           <h4 className="mb-0">Listado de Citas</h4>
         </div>
         <div className="card-body">
@@ -82,6 +129,7 @@ function Citas() {
                 {usuario?.rol?.id_rol !== 1 && <th>Paciente</th>}
                 <th>Médico</th>
                 <th>Especialidad</th>
+                <th>Acciones</th>
               </tr>
             </thead>
             <tbody>
@@ -104,6 +152,16 @@ function Citas() {
                   )}
                   <td>{cita.medicoNombre} {cita.medicoApellido}</td>
                   <td>{cita.especialidad}</td>
+                  <td>
+                    <button
+                      className="btn btn-outline-primary btn-sm"
+                      onClick={() => imprimirCitaPDF(cita)}
+                      title="Imprimir esta cita"
+                      style={{ minWidth: '90px' }}
+                    >
+                      🖨️ Imprimir
+                    </button>
+                  </td>
                 </tr>
               ))}
             </tbody>

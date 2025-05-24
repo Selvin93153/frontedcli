@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { getHistorialClinico } from '../../api/historialClinico';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import { jsPDF } from 'jspdf';
 
 function HistorialClinico() {
   const [historiales, setHistoriales] = useState([]);
@@ -34,7 +35,6 @@ function HistorialClinico() {
       })
       .catch(error => console.error('Error al cargar historial clínico:', error));
 
-    // Cargar pacientes
     axios.get('http://localhost:4000/api/pacientes')
       .then(res => setPacientes(res.data))
       .catch(err => console.error('Error al cargar pacientes:', err));
@@ -78,7 +78,6 @@ function HistorialClinico() {
         apellidos: ''
       });
 
-      // Recargar historial
       const data = await getHistorialClinico();
       const adaptados = data.map(h => ({
         id: h.id_historial,
@@ -94,6 +93,52 @@ function HistorialClinico() {
       console.error('❌ Error al guardar historial:', error);
       alert('Error al guardar historial clínico');
     }
+  };
+
+  const imprimirPDF = (historial) => {
+    const doc = new jsPDF();
+
+    doc.setFontSize(18);
+    doc.setTextColor('#0d6efd');
+    doc.text('🩺 Historial Clínico', 105, 20, null, null, 'center');
+
+    doc.setDrawColor(13, 110, 253);
+    doc.setLineWidth(0.5);
+    doc.line(15, 25, 195, 25);
+
+    doc.setFontSize(12);
+    doc.setTextColor('#212529');
+
+    let posY = 40;
+    const saltoLinea = 10;
+
+    doc.text(`Nombre: ${historial.nombres} ${historial.apellidos}`, 15, posY);
+    posY += saltoLinea;
+    doc.text(`Teléfono: ${historial.telefono}`, 15, posY);
+    posY += saltoLinea;
+
+    doc.text('Diagnóstico:', 15, posY);
+    posY += saltoLinea;
+    doc.text(historial.diagnostico, 25, posY);
+    posY += saltoLinea * 2;
+
+    doc.text('Tratamiento:', 15, posY);
+    posY += saltoLinea;
+    doc.text(historial.tratamiento, 25, posY);
+    posY += saltoLinea * 2;
+
+    doc.text(`Fecha de registro: ${historial.fecha}`, 15, posY);
+    posY += saltoLinea;
+
+    doc.setDrawColor(13, 110, 253);
+    doc.line(15, posY + 5, 195, posY + 5);
+
+    doc.setFontSize(10);
+    doc.setTextColor('#6c757d');
+    doc.text('Sistema de Gestión Clínica', 15, 285, null, null, 'left');
+    doc.text(`Generado: ${new Date().toLocaleString()}`, 195, 285, null, null, 'right');
+
+    doc.save(`HistorialClinico_${historial.id}.pdf`);
   };
 
   return (
@@ -182,6 +227,7 @@ function HistorialClinico() {
             <th>Diagnóstico</th>
             <th>Tratamiento</th>
             <th>Fecha</th>
+            <th>Acciones</th>
           </tr>
         </thead>
         <tbody>
@@ -194,6 +240,14 @@ function HistorialClinico() {
               <td>{h.diagnostico}</td>
               <td>{h.tratamiento}</td>
               <td>{h.fecha}</td>
+              <td>
+                <button
+                  className="btn btn-outline-primary btn-sm"
+                  onClick={() => imprimirPDF(h)}
+                >
+                  🖨️ Imprimir
+                </button>
+              </td>
             </tr>
           ))}
         </tbody>

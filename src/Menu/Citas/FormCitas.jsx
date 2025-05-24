@@ -1,7 +1,5 @@
-// src/components/FormCitas.jsx
-
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
+import { getPacientes, getMedicos, getCitas, createCita } from '../../api/Citas';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 const FormCitas = ({ onCitaCreada }) => {
@@ -13,31 +11,26 @@ const FormCitas = ({ onCitaCreada }) => {
   const [especialidad, setEspecialidad] = useState('');
   const [pacientes, setPacientes] = useState([]);
   const [medicos, setMedicos] = useState([]);
+  const [citasExistentes, setCitasExistentes] = useState([]);
 
   useEffect(() => {
-    const fetchPacientes = async () => {
+    const fetchData = async () => {
       try {
-        const res = await axios.get('http://localhost:4000/api/pacientes');
-        setPacientes(res.data);
-      } catch (err) {
-        console.error('Error al cargar pacientes', err);
+        const [pacientesData, medicosData, citasData] = await Promise.all([
+          getPacientes(),
+          getMedicos(),
+          getCitas(),
+        ]);
+        setPacientes(pacientesData);
+        setMedicos(medicosData);
+        setCitasExistentes(citasData);
+      } catch (error) {
+        console.error('Error al cargar datos:', error);
       }
     };
-
-    const fetchMedicos = async () => {
-      try {
-        const res = await axios.get('http://localhost:4000/api/medicos');
-        setMedicos(res.data);
-      } catch (err) {
-        console.error('Error al cargar médicos', err);
-      }
-    };
-
-    fetchPacientes();
-    fetchMedicos();
+    fetchData();
   }, []);
 
-  // Actualizar especialidad cuando se seleccione un médico
   useEffect(() => {
     if (idMedico) {
       const medicoSeleccionado = medicos.find(m => m.id_medico === parseInt(idMedico));
@@ -47,8 +40,22 @@ const FormCitas = ({ onCitaCreada }) => {
     }
   }, [idMedico, medicos]);
 
+  const citaDuplicada = () => {
+    if (!fecha || !hora || !idMedico) return false;
+    return citasExistentes.some(cita =>
+      cita.medico.id_medico === parseInt(idMedico) &&
+      cita.fecha === fecha &&
+      cita.hora === hora
+    );
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    if (citaDuplicada()) {
+      alert('❌ Ya existe una cita para ese médico en la fecha y hora seleccionadas.');
+      return;
+    }
 
     const nuevaCita = {
       fecha,
@@ -59,7 +66,7 @@ const FormCitas = ({ onCitaCreada }) => {
     };
 
     try {
-      await axios.post('http://localhost:4000/api/citas', nuevaCita);
+      await createCita(nuevaCita);
       alert('✅ Cita registrada correctamente');
       setFecha('');
       setHora('');
@@ -68,9 +75,17 @@ const FormCitas = ({ onCitaCreada }) => {
       setIdMedico('');
       setEspecialidad('');
       if (onCitaCreada) onCitaCreada();
+
+      // Actualizar citas existentes para mantener la validación actualizada
+      const citasData = await getCitas();
+      setCitasExistentes(citasData);
     } catch (err) {
       console.error('Error al registrar cita', err);
-      alert('❌ Error al registrar la cita');
+      if (err.response?.data?.message) {
+        alert(`❌ ${err.response.data.message}`);
+      } else {
+        alert('❌ Error al registrar la cita');
+      }
     }
   };
 
@@ -88,15 +103,26 @@ const FormCitas = ({ onCitaCreada }) => {
           />
         </div>
         <div className="col-md-6">
-          <label className="form-label">⏰ Hora:</label>
-          <input
-            type="time"
-            className="form-control"
-            value={hora}
-            onChange={(e) => setHora(e.target.value)}
-            required
-          />
-        </div>
+  <label className="form-label">⏰ Hora (08:00 - 17:00):</label>
+  <select
+    className="form-select"
+    value={hora}
+    onChange={(e) => setHora(e.target.value)}
+    required
+  >
+    <option value="">-- Seleccione una hora --</option>
+    {Array.from({ length: 10 }, (_, i) => {
+      const hour = 8 + i;
+      const hourStr = hour.toString().padStart(2, '0');
+      return (
+        <option key={hourStr} value={`${hourStr}:00`}>
+          {hourStr}:00
+        </option>
+      );
+    })}
+  </select>
+</div>
+
         <div className="col-md-6">
           <label className="form-label">👤 Paciente:</label>
           <select
