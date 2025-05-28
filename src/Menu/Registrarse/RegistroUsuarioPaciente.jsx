@@ -223,4 +223,4 @@ function RegistroUsuarioPaciente({ onSuccess, onCancel }) {
   );
 }
 
-export default RegistroUsuarioPaciente;
+export default RegistroUsuarioPaciente;  
