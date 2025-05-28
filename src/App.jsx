@@ -2,6 +2,9 @@ import { useEffect, useState } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './App.css';
 
+import 'bootstrap/dist/js/bootstrap.bundle.min.js';
+
+
 import Citas from './Menu/Citas/Citas.jsx';
 import Historial from './Menu/historial/HistorialClinico.jsx';
 import Inicio from './Menu/Inicio.jsx';
@@ -11,6 +14,7 @@ import Usuarios from './Menu/usuarios/Usuarios.jsx';
 import Pacientes from './Menu/pacientes/Pacientes.jsx';
 import Login from './Login/Login.jsx';
 import Medicos from './Menu/medicos/Medicos.jsx';
+import Contacto from './Menu/Contacto.jsx';
 
 
 
@@ -87,10 +91,11 @@ function App() {
         {(idRol === 2 || idRol === 3) && (
           <button className="btn btn-outline-light w-100 mb-2" onClick={() => setModuloActivo('pacientes')}>🧑‍🤝‍🧑 {sidebarAbierto && 'Pacientes'}</button>
         )}
+         {(idRol === 1 || idRol === 2 || idRol === 3) && (
+        <button className="btn btn-outline-light w-100 mb-2" onClick={() => setModuloActivo('contacto')}>📞 Contacto</button>
+       )}
 
         <button className="btn btn-danger w-100 mt-4" onClick={handleLogout}>🚪 {sidebarAbierto && 'Cerrar Sesión'}</button>
-      
-
       </div>
 
       {/* Contenido principal */}
@@ -105,6 +110,8 @@ function App() {
         {moduloActivo === 'notificaciones' && <Notificaciones usuario={usuario} />}
         {moduloActivo === 'medicos' && <Medicos />}
         {moduloActivo === 'pacientes' && <Pacientes usuario={usuario} />}
+        {moduloActivo === 'contacto' && <Contacto usuario={usuario} />}
+
        
       </div>
     </div>

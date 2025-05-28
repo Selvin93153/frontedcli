@@ -1,15 +1,15 @@
 import React, { useEffect, useState } from 'react';
-import { getCitas } from '../../api/Citas';
+import { getCitas, updateCita, deleteCita } from '../../api/Citas';
 import FormCitas from '../Citas/FormCitas.jsx';
 import 'bootstrap/dist/css/bootstrap.min.css';
-
-// Importar jsPDF y autotable
 import jsPDF from 'jspdf';
 import 'jspdf-autotable';
 
 function Citas() {
   const [citas, setCitas] = useState([]);
   const [usuario, setUsuario] = useState(null);
+  const [editandoId, setEditandoId] = useState(null);
+  const [nuevoEstado, setNuevoEstado] = useState('');
 
   useEffect(() => {
     const usuarioGuardado = localStorage.getItem('usuario');
@@ -22,11 +22,9 @@ function Citas() {
   const cargarCitas = async () => {
     try {
       const data = await getCitas();
-
       let citasFiltradas = data;
 
       if (usuario?.rol?.id_rol === 1) {
-        // Si es paciente, filtrar por su id_usuario
         citasFiltradas = data.filter(cita =>
           cita.paciente?.usuario?.id_usuario === usuario.id
         );
@@ -56,28 +54,22 @@ function Citas() {
     }
   }, [usuario]);
 
-  // Función para imprimir una cita en PDF
   const imprimirCitaPDF = (cita) => {
     const doc = new jsPDF();
-
     doc.setFontSize(18);
-    doc.setTextColor('#0d6efd'); // color azul bootstrap
+    doc.setTextColor('#0d6efd');
     doc.text('📅 Detalles de la Cita Médica', 14, 22);
-
-    doc.setDrawColor(13, 110, 253); // azul para líneas
+    doc.setDrawColor(13, 110, 253);
     doc.setLineWidth(0.5);
     doc.line(14, 25, 196, 25);
-
     doc.setFontSize(12);
-    doc.setTextColor('#212529'); // color texto normal
-
+    doc.setTextColor('#212529');
     const startY = 35;
     const lineHeight = 10;
 
     doc.text(`ID Cita: ${cita.id}`, 14, startY);
     doc.text(`Fecha: ${cita.fecha}`, 14, startY + lineHeight);
     doc.text(`Hora: ${cita.hora}`, 14, startY + lineHeight * 2);
-
     doc.text(`Estado: ${cita.estado}`, 14, startY + lineHeight * 3);
 
     if (usuario?.rol?.id_rol !== 1) {
@@ -86,17 +78,37 @@ function Citas() {
 
     doc.text(`Médico: Dr(a). ${cita.medicoNombre} ${cita.medicoApellido}`, 14, startY + lineHeight * 5);
     doc.text(`Especialidad: ${cita.especialidad}`, 14, startY + lineHeight * 6);
-
     doc.setDrawColor(13, 110, 253);
     doc.line(14, startY + lineHeight * 7 + 2, 196, startY + lineHeight * 7 + 2);
-
-    // Footer
     doc.setFontSize(10);
     doc.setTextColor('#6c757d');
     doc.text('Sistema de Gestión de Citas Médicas', 14, 285, null, null, 'left');
     doc.text(`Generado el: ${new Date().toLocaleString()}`, 196, 285, null, null, 'right');
 
     doc.save(`Cita_${cita.id}.pdf`);
+  };
+
+  const guardarEstado = async (id) => {
+    try {
+      const dataAEnviar = { estado: nuevoEstado };
+      await updateCita(id, dataAEnviar);
+      setEditandoId(null);
+      setNuevoEstado('');
+      cargarCitas();
+    } catch (error) {
+      console.error('Error al actualizar estado:', error);
+    }
+  };
+
+  const eliminarCita = async (id) => {
+    if (window.confirm('¿Estás seguro de eliminar esta cita?')) {
+      try {
+        await deleteCita(id);
+        cargarCitas();
+      } catch (error) {
+        console.error('Error al eliminar cita:', error);
+      }
+    }
   };
 
   return (
@@ -115,14 +127,13 @@ function Citas() {
       )}
 
       <div className="card shadow">
-        <div className="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+        <div className="card-header bg-primary text-white">
           <h4 className="mb-0">Listado de Citas</h4>
         </div>
         <div className="card-body">
           <table className="table table-hover table-striped text-center align-middle">
             <thead className="table-light">
               <tr>
-                <th>ID</th>
                 <th>Fecha</th>
                 <th>Hora</th>
                 <th>Estado</th>
@@ -135,17 +146,28 @@ function Citas() {
             <tbody>
               {citas.map(cita => (
                 <tr key={cita.id}>
-                  <td>{cita.id}</td>
                   <td>{cita.fecha}</td>
                   <td>{cita.hora}</td>
                   <td>
-                    <span className={`badge ${
-                      cita.estado === 'pendiente' ? 'bg-warning text-dark' :
-                      cita.estado === 'completada' ? 'bg-success' :
-                      'bg-danger'
-                    }`}>
-                      {cita.estado}
-                    </span>
+                    {editandoId === cita.id ? (
+                      <select
+                        className="form-select"
+                        value={nuevoEstado}
+                        onChange={(e) => setNuevoEstado(e.target.value)}
+                      >
+                        <option value="pendiente">pendiente</option>
+                        <option value="completada">completada</option>
+                        <option value="cancelada">cancelada</option>
+                      </select>
+                    ) : (
+                      <span className={`badge ${
+                        cita.estado === 'pendiente' ? 'bg-warning text-dark' :
+                        cita.estado === 'completada' ? 'bg-success' :
+                        'bg-danger'
+                      }`}>
+                        {cita.estado}
+                      </span>
+                    )}
                   </td>
                   {usuario?.rol?.id_rol !== 1 && (
                     <td>{cita.pacienteNombre} {cita.pacienteApellido}</td>
@@ -154,13 +176,39 @@ function Citas() {
                   <td>{cita.especialidad}</td>
                   <td>
                     <button
-                      className="btn btn-outline-primary btn-sm"
+                      className="btn btn-outline-primary btn-sm me-1"
                       onClick={() => imprimirCitaPDF(cita)}
-                      title="Imprimir esta cita"
-                      style={{ minWidth: '90px' }}
                     >
-                      🖨️ Imprimir
+                      🖨️
                     </button>
+                    {usuario?.rol?.id_rol !== 1 && (
+                      <>
+                        {editandoId === cita.id ? (
+                          <button
+                            className="btn btn-success btn-sm me-1"
+                            onClick={() => guardarEstado(cita.id)}
+                          >
+                            Guardar
+                          </button>
+                        ) : (
+                          <button
+                            className="btn btn-warning btn-sm me-1"
+                            onClick={() => {
+                              setEditandoId(cita.id);
+                              setNuevoEstado(cita.estado);
+                            }}
+                          >
+                            ✏️
+                          </button>
+                        )}
+                        <button
+                          className="btn btn-danger btn-sm"
+                          onClick={() => eliminarCita(cita.id)}
+                        >
+                          🗑️
+                        </button>
+                      </>
+                    )}
                   </td>
                 </tr>
               ))}

@@ -41,3 +41,25 @@ export const getMedicos = async () => {
     throw error;
   }
 };
+
+export const updateCita = async (idCita, data) => {
+  try {
+    const response = await axios.put(`${API_URL}/api/citas/${idCita}`, data);
+    return response.data;
+  } catch (error) {
+    console.error('Error al actualizar el estado de la cita:', error);
+    throw error;
+  }
+};
+
+export const deleteCita = async (idCita) => {
+  try {
+    const response = await axios.delete(`${API_URL}/api/citas/${idCita}`);
+    return response.data;
+  } catch (error) {
+    console.error('Error al eliminar la cita:', error);
+    throw error;
+  }
+};
+
+

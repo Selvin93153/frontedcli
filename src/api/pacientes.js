@@ -22,3 +22,13 @@ export const updatePaciente = async (id_paciente, data) => {
     throw error;
   }
 };
+
+export const deletePaciente = async (id) => {
+  try {
+    const response = await axios.delete(`${API_URL}/api/pacientes/${id}`);
+    return response.data;
+  } catch (error) {
+    console.error('Error al eliminar paciente:', error);
+    throw error;
+  }
+};

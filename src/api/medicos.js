@@ -22,3 +22,4 @@ export const updateMedico = async (id, data) => {
   const response = await axios.patch(`http://localhost:4000/api/medicos/${id}`, data);
   return response.data;
 };
+

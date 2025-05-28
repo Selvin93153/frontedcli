@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { getPacientes } from '../../api/pacientes';
+import { getPacientes, deletePaciente } from '../../api/pacientes';
 import FormPaciente from './FormPaciente';
 
 function Pacientes({ usuario }) {
@@ -7,15 +7,13 @@ function Pacientes({ usuario }) {
   const [selectedPaciente, setSelectedPaciente] = useState(null);
   const [showForm, setShowForm] = useState(false);
 
-  // Solo permite a usuarios con rol 2 o 3 ver este módulo
-if (![2, 3].includes(usuario.rol.id_rol)) {
-  return (
-    <div style={{ padding: '2rem', textAlign: 'center' }}>
-      <h4 className="text-muted">⚠️ No tienes permiso para ver este módulo.</h4>
-    </div>
-  );
-}
-
+  if (![2, 3].includes(usuario.rol.id_rol)) {
+    return (
+      <div style={{ padding: '2rem', textAlign: 'center' }}>
+        <h4 className="text-muted">⚠️ No tienes permiso para ver este módulo.</h4>
+      </div>
+    );
+  }
 
   const fetchPacientes = async () => {
     try {
@@ -33,6 +31,18 @@ if (![2, 3].includes(usuario.rol.id_rol)) {
   const handleEdit = (paciente) => {
     setSelectedPaciente(paciente);
     setShowForm(true);
+  };
+
+  const handleDelete = async (id) => {
+    const confirmacion = window.confirm('¿Estás seguro de eliminar este paciente?');
+    if (confirmacion) {
+      try {
+        await deletePaciente(id);
+        fetchPacientes();
+      } catch (error) {
+        console.error('Error al eliminar paciente:', error);
+      }
+    }
   };
 
   const handleNew = () => {
@@ -76,6 +86,11 @@ if (![2, 3].includes(usuario.rol.id_rol)) {
               <td>
                 <button onClick={() => handleEdit(p)} style={styles.editButton}>
                   Editar
+                </button>
+                </td>
+                <td>
+                <button onClick={() => handleDelete(p.id_paciente)} style={styles.deleteButton}>
+                  Eliminar
                 </button>
               </td>
             </tr>
@@ -126,7 +141,16 @@ const styles = {
     padding: '6px 12px',
     borderRadius: '5px',
     cursor: 'pointer',
+    marginRight: '8px',
   },
+  deleteButton: {
+    backgroundColor: '#dc3545',
+    color: '#fff',
+    border: 'none',
+    padding: '6px 12px',
+    borderRadius: '5px',
+    cursor: 'pointer',
+  }
 };
 
 export default Pacientes;

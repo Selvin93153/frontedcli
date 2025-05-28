@@ -220,7 +220,6 @@ function HistorialClinico() {
       <table className="table table-bordered table-striped">
         <thead className="table-primary">
           <tr>
-            <th>ID</th>
             <th>Nombres</th>
             <th>Apellidos</th>
             <th>Teléfono</th>
@@ -233,7 +232,6 @@ function HistorialClinico() {
         <tbody>
           {historiales.map(h => (
             <tr key={h.id}>
-              <td>{h.id}</td>
               <td>{h.nombres}</td>
               <td>{h.apellidos}</td>
               <td>{h.telefono}</td>
