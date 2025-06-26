@@ -45,7 +45,7 @@ export const updateNotificacion = async (id, data) => {
 };
 
 export const marcarComoLeida = async (id) => {
-  const res = await fetch(`http://localhost:4000/api/notificaciones/${id}`, {
+  const res = await fetch(`https://backend-clinica-j1pc.onrender.com/api/notificaciones/${id}`, {
     method: 'PATCH',
     headers: {
       'Content-Type': 'application/json',

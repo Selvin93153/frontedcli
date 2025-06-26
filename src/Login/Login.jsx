@@ -14,7 +14,7 @@ function Login({ onLoginSuccess }) {
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post('http://localhost:4000/api/auth/login', {
+      const response = await axios.post('https://backend-clinica-j1pc.onrender.com/api/auth/login', {
         correo,
         password,
       });

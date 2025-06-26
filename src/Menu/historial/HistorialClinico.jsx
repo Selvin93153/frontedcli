@@ -35,7 +35,7 @@ function HistorialClinico() {
       })
       .catch(error => console.error('Error al cargar historial clínico:', error));
 
-    axios.get('http://localhost:4000/api/pacientes')
+    axios.get('https://backend-clinica-j1pc.onrender.com/api/pacientes')
       .then(res => setPacientes(res.data))
       .catch(err => console.error('Error al cargar pacientes:', err));
   }, []);
@@ -60,7 +60,7 @@ function HistorialClinico() {
     const { id_paciente, diagnostico, tratamiento, fecha_registro } = formulario;
 
     try {
-      await axios.post('http://localhost:4000/api/historial-clinico', {
+      await axios.post('https://backend-clinica-j1pc.onrender.com/api/historial-clinico', {
         id_paciente: parseInt(id_paciente),
         diagnostico,
         tratamiento,

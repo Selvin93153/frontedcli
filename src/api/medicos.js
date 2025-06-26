@@ -1,7 +1,7 @@
 import axios from 'axios';
 
-const API = 'http://localhost:4000/api/medicos';
-const API_USUARIOS = 'http://localhost:4000/api/usuarios';
+const API = 'https://backend-clinica-j1pc.onrender.com/api/medicos';
+const API_USUARIOS = 'https://backend-clinica-j1pc.onrender.com/api/usuarios';
 
 export const getMedicos = async () => {
   const response = await axios.get(API);
@@ -19,7 +19,7 @@ export const createMedico = async (medicoData) => {
 };
 
 export const updateMedico = async (id, data) => {
-  const response = await axios.patch(`http://localhost:4000/api/medicos/${id}`, data);
+  const response = await axios.patch(`https://backend-clinica-j1pc.onrender.com/api/medicos/${id}`, data);
   return response.data;
 };
 
