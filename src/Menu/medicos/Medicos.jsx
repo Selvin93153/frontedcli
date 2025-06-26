@@ -159,7 +159,6 @@ function Medicos() {
         <table className="table table-striped table-bordered table-hover align-middle">
           <thead className="table-dark text-center">
             <tr>
-              <th>ID</th>
               <th>Nombre Completo</th>
               <th>Especialidad</th>
               <th>Teléfono</th>
@@ -170,7 +169,6 @@ function Medicos() {
           <tbody className="text-center">
             {medicos.map((medico) => (
               <tr key={medico.id_medico}>
-                <td>{medico.id_medico}</td>
                 <td>{`${medico.usuario?.nombres} ${medico.usuario?.apellidos}`}</td>
                 <td>{medico.especialidad}</td>
                 <td>{medico.telefono}</td>

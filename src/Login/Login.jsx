@@ -47,7 +47,7 @@ function Login({ onLoginSuccess }) {
       className="vh-100 d-flex align-items-center justify-content-center"
       style={{
         backgroundImage: `url(${fondoInicio})`,
-        backgroundSize: '2300px auto', // Reduce visualmente la escala de la imagen
+        backgroundSize: '2000px auto', // Reduce visualmente la escala de la imagen
         backgroundRepeat: 'no-repeat',
         backgroundPosition: 'center',
         position: 'relative',

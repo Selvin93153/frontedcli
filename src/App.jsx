@@ -68,11 +68,11 @@ function App() {
           <button className="btn btn-outline-light w-100 mb-2" onClick={() => setModuloActivo('usuarios')}>👥 {sidebarAbierto && 'Usuarios'}</button>
         )}
 
-        {(idRol === 1 || idRol === 2 || idRol === 3) && (
+        {(idRol === 1 || idRol === 2 || idRol === 3 || idRol ==4) && (
           <button className="btn btn-outline-light w-100 mb-2" onClick={() => setModuloActivo('citas')}>📅 {sidebarAbierto && 'Citas'}</button>
         )}
 
-        {idRol === 3 && (
+       {(idRol === 3 || idRol ==4)&& (
           <button className="btn btn-outline-light w-100 mb-2" onClick={() => setModuloActivo('inventario')}>🧪 {sidebarAbierto && 'Inventario'}</button>
         )}
 
@@ -80,7 +80,7 @@ function App() {
           <button className="btn btn-outline-light w-100 mb-2" onClick={() => setModuloActivo('historial')}>📋 {sidebarAbierto && 'Historial'}</button>
         )}
 
-        {(idRol === 1 || idRol === 2 || idRol === 3) && (
+        {(idRol === 1 || idRol === 2 || idRol === 3 || idRol === 4 ) && (
           <button className="btn btn-outline-light w-100 mb-2" onClick={() => setModuloActivo('notificaciones')}>🔔 {sidebarAbierto && 'Notificaciones'}</button>
         )}
 
@@ -88,10 +88,10 @@ function App() {
           <button className="btn btn-outline-light w-100 mb-2" onClick={() => setModuloActivo('medicos')}>🧑‍⚕️ {sidebarAbierto && 'Médicos'}</button>
         )}
 
-        {(idRol === 2 || idRol === 3) && (
+        {(idRol === 2 || idRol === 3 || idRol === 4) && (
           <button className="btn btn-outline-light w-100 mb-2" onClick={() => setModuloActivo('pacientes')}>🧑‍🤝‍🧑 {sidebarAbierto && 'Pacientes'}</button>
         )}
-         {(idRol === 1 || idRol === 2 || idRol === 3) && (
+         {(idRol === 1 || idRol === 2 || idRol === 3 || idRol === 4) && (
         <button className="btn btn-outline-light w-100 mb-2" onClick={() => setModuloActivo('contacto')}>📞 Contacto</button>
        )}
 

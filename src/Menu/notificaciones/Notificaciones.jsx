@@ -83,7 +83,7 @@ function Notificaciones() {
         🔔 Notificaciones {hayNoLeidas && <span style={{ color: 'red' }}>📢</span>}
       </h2>
 
-      {(usuario?.rol?.id_rol === 3 || usuario?.rol?.id_rol === 2) && !mostrarFormulario && (
+      {(usuario?.rol?.id_rol === 3 || usuario?.rol?.id_rol === 2 || usuario?.rol?.id_rol === 4) && !mostrarFormulario && (
         <button className="btn btn-primary mb-4" onClick={handleMostrarFormulario}>
           ➕ Enviar Notificación
         </button>
@@ -110,7 +110,7 @@ function Notificaciones() {
                         Marcar como leída
                       </button>
                     )}
-                    {( usuario?.rol?.id_rol === 1 || usuario?.rol?.id_rol === 2 || usuario?.rol?.id_rol === 3) && (
+                    {( usuario?.rol?.id_rol === 1 || usuario?.rol?.id_rol === 2 || usuario?.rol?.id_rol === 3 || usuario?.rol?.id_rol === 4) && (
                       <button className="btn btn-danger btn-sm" onClick={() => eliminarNotificacion(n.id)}>
                         🗑️ Eliminar
                       </button>
