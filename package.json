@@ -2,10 +2,10 @@
   "name": "sistemaclinico",
   "version": "1.0.0",
   "scripts": {
-    "dev": "vite",
-    "build": "vite build",
-    "preview": "vite preview"
-  },
+  "dev": "vite",
+  "build": "npx vite build",
+  "preview": "vite preview"
+},
   "dependencies": {
   "axios": "^1.9.0",
   "bootstrap": "^5.3.6",
