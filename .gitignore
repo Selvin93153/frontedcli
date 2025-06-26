@@ -1,1 +1,25 @@
+# Node modules (dependencias instaladas)
+node_modules/
+
+# Archivos de logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Directorio de build (carpeta generada con vite build)
+dist/
+
+# Archivos de entorno que contienen datos sensibles
+.env
 .env.local
+.env.*.local
+
+# Sistema operativo
+.DS_Store
+Thumbs.db
+
+# Editor (VSCode)
+.vscode/
+
+# Otros caches
+.cache/
